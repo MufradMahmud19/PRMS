@@ -10,6 +10,7 @@ This project is a **FastAPI-based RESTful API** for managing patient visit histo
 - **Redis Integration**: Uses `redis-om` for high-speed database access.
 - **CORS Enabled**: Supports cross-origin requests for frontend integration.
 
+
 ## 📌 Installation
 ### 1️⃣ Clone the repository
 ```sh
