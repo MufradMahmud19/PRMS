@@ -78,11 +78,11 @@ Postman / curl requests.
 curl -X POST "http://127.0.0.1:8000/patient_visit" \
      -H "Content-Type: application/json" \
      -d '{
-          "patient_id": "12345",
+          "patient_id": "01JN9JJVXW8Z3Y5Z8BMD4YCHM7",
           "visit_date": "2025-02-09",
           "doctor_id": "D100",
           "diagnosis": "Flu",
-          "prescription_id": "P5678",
+          "prescription_id": "PRESC5678",
           "notes": "Rest for 3 days"
       }'
 ````
