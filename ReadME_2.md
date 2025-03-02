@@ -6,6 +6,7 @@ This repository contains **functional tests** for the **Patient Management API**
 - **Prescriptions**  
 
 The tests validate:
+
 ✅ API endpoints' functionality  
 ✅ Correct handling of valid/invalid requests  
 ✅ Proper response codes and error messages  
