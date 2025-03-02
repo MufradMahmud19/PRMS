@@ -72,7 +72,9 @@ pytest tests/test_patient_data.py::test_create_patient
 Example Test (Create Patient)
 
 In POSTMAN:
+
 127.0.0.1:8000/patients
+
 Method: POST
 ```sh
 {
@@ -109,6 +111,7 @@ In POSTMAN:
 Retrieve patient visit
 
 http://127.0.0.1:8001/patient_visit
+
 METHOD: GET
 
 ```sh
@@ -127,6 +130,7 @@ METHOD: GET
 Update Patient Visit
 
 http://127.0.0.1:8001/patient_visit/<PASTE_VISIT_ID(pk of visit history)>
+
 METHOD: PUT
 
 ```sh
