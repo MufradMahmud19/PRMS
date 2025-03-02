@@ -18,27 +18,33 @@ cd PatientHistory
 ```
 
 ### 2️⃣ Create a Virtual Environment (Optional but Recommended)
+```sh
 python -m venv venv
 source venv/bin/activate  # On macOS/Linux
 venv\Scripts\activate  # On Windows
+```
 
 ### 3️⃣ Install Dependencies
+```sh
 pip install -r requirements.txt
+```
 
 ## 🛠️ Environment Variables
 Set up the Redis connection details in DBConnection.py:
 
+```sh
 redis = get_redis_connection(
     host="your-redis-host",
     port=your-redis-port,
     password="your-redis-password",
     decode_responses=True
 )
-
+```
 ## 🚦 Running the API
 ### 1️⃣ Start FastAPI Server
+```sh
 uvicorn main:app --reload
-
+````
 By default, the server runs at http://127.0.0.1:8000
 
 ### 2️⃣ Test API Endpoints
@@ -68,6 +74,7 @@ Postman / curl requests.
 
 ## 🔥 Example Request (Create Patient Visit)
 
+```sh
 curl -X POST "http://127.0.0.1:8000/patient_visit" \
      -H "Content-Type: application/json" \
      -d '{
@@ -78,6 +85,7 @@ curl -X POST "http://127.0.0.1:8000/patient_visit" \
           "prescription_id": "P5678",
           "notes": "Rest for 3 days"
       }'
+````
 
 ## 🗄️ Database Setup
 
