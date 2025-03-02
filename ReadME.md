@@ -72,7 +72,7 @@ Postman / curl requests.
 |PUT       |        /prescription/{pk}      |            Update a prescription          |
 |DELETE       |      /prescription/{pk}        |         Delete a prescription            |
 
-## 🔥 Example Request (Create Patient Visit)
+## Example Request (Create Patient Visit)
 
 ```sh
 curl -X POST "http://127.0.0.1:8000/patient_visit" \
