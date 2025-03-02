@@ -18,7 +18,6 @@ The tests validate:
 ## 📌 Project Structure
 tests/ │── test_patient_data.py # Tests for Patient API │── test_patient_history.py # Tests for Visit History API │── test_prescription.py # Tests for Prescription API │── test_utils.py # Helper functions │── test_data.json # Sample test data │── run_tests.sh # Shell script to execute tests │── README.md # Documentation
 
-
 ---
 
 ## 📦 Dependencies
