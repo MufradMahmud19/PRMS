@@ -175,10 +175,15 @@ http://127.0.0.1:8001/prescription/
 ```
 
 ## 🛑 Error Handling Tested
+
 ✅ Invalid Patient ID → 404 Not Found
+
 ✅ Missing Required Fields → 422 Unprocessable Entity
+
 ✅ Duplicate Entries → 400 Bad Request
+
 ✅ Invalid Date Format → 422 Validation Error
+
 
 ## Some Observations from Testing
 
