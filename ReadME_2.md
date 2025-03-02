@@ -7,8 +7,10 @@ This repository contains **functional tests** for the **Patient Management API**
 
 The tests validate:
 
-✅ API endpoints' functionality  
-✅ Correct handling of valid/invalid requests  
+✅ API endpoints' functionality
+
+✅ Correct handling of valid/invalid requests
+
 ✅ Proper response codes and error messages  
 
 ---
