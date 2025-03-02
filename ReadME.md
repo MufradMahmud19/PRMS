@@ -1,16 +1,14 @@
-# Patient History API
+# Patient API
 
 This project is a **FastAPI-based RESTful API** for managing patient visit histories and prescriptions using **Redis** as the database.
 
 ## 🚀 Features
+- **Patient Data Records**: Create, retrieve, update, and delete patient.
 - **Patient Visit Records**: Create, retrieve, update, and delete patient visit history.
 - **Prescription Management**: Store, retrieve, update, and delete prescriptions.
+- **Patient Report Management**: Store, retrieve, update, and delete patient report.
 - **Redis Integration**: Uses `redis-om` for high-speed database access.
 - **CORS Enabled**: Supports cross-origin requests for frontend integration.
-
-## 🏗️ Project Structure
-PatientHistory/ │── DBConnection.py # Connects to Redis │── main.py # FastAPI app setup & CORS │── router.py # API endpoints │── schemas.py # Data models (Redis-OM) │── requirements.txt # Dependencies │── README.md # Project documentation
-
 
 ## 📌 Installation
 ### 1️⃣ Clone the repository
