@@ -1,0 +1,3 @@
+fastapi    v=0.115.4
+Redis server v=7.2.7
+apikey: S6065iqjfll582ova7m2l2fii9uckl2jie12pfls59pcjtydis8
