@@ -17,7 +17,7 @@ Access Swagger UI at: `http://localhost:5000/api/docs/`
 }
 ```
 **Error Response**
-**404 not found**
+**(404 not found)**
 
 ```json
 {
