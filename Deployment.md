@@ -19,4 +19,3 @@
    ```bash
    gunicorn --bind :5000 run:app
    ```
-```
