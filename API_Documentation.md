@@ -16,3 +16,17 @@ Access Swagger UI at: `http://localhost:5000/api/docs/`
   "age": 45
 }
 ```
+**Error Response**
+**404 not found**
+
+```json
+{
+  "error": "Patient not found",
+  "_links": {
+    "hospital:search": {
+      "href": "/patients?q={name}",
+      "templated": true
+    }
+  }
+}
+```
