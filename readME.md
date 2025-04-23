@@ -141,14 +141,16 @@ Example:
 |DELETE|/patients/{id}|Delete patient|
 
 ## Visit
-|Method|Endpoint|Description|
+|**Method**|**Endpoint**|**Description**|
+|:-------------------: |:------------:|:--------------------:|
 |POST	|/patient_visit	|Add visit|
 |GET	|/patient_visit/{id}|	Get visit history|
 |PUT	|/patient_visit/{id}|	Update visit|
 |DELETE	|/patient_visit/{id}	|Delete visit|
 
 ## Prescription
-|Method	|Endpoint|	Description|
+|**Method**|**Endpoint**|**Description**|
+|:-------------------: |:------------:|:--------------------:|
 |POST	|/prescription/|	Create prescription|
 |GET	|/prescription/{id}|	Get prescription|
 |PUT	|/prescription/{id}|	Update prescription|
@@ -171,7 +173,8 @@ curl -X POST "http://127.0.0.1:8000/patient_visit" \
 
 ### 🧠 Hypermedia Enhancements
 ## Custom Relations
-|Relation|	Type|	Purpose|
+|**Relation**|**Type**|**Purpose**|
+|:-------------------: |:------------:|:--------------------:|
 |hospital:prescribe|	Action|	Create prescription|
 |hospital:attach-report|	Navigation|	Link reports to visits|
 |hospital:patient-timeline|	Collection|	Full history for a patient|
