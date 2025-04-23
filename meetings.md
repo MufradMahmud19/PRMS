@@ -27,11 +27,11 @@
 
 
 ## Meeting 3.
-* **DATE:**
-* **ASSISTANTS:**
+* **DATE: 20.03.2025**
+* **ASSISTANTS: Mika Oja**
 
-### Minutes
-*Summary of what was discussed during the meeting*
+### 30 Minutes
+*Some errors were discussed, and some vacant fields were pointed out which should have been filled out.*
 
 ### Action points
 *List here the actions points discussed with assistants*
@@ -40,8 +40,8 @@
 
 
 ## Meeting 4.
-* **DATE:**
-* **ASSISTANTS:**
+* **DATE: 23.04.2025**
+* **ASSISTANTS: Mika Oja**
 
 ### Minutes
 *Summary of what was discussed during the meeting*
