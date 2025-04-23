@@ -171,9 +171,9 @@ curl -X POST "http://127.0.0.1:8000/patient_visit" \
 }'
 ```
 
-### 🧠 Hypermedia Implementation and Enchatments
+# 🧠 Hypermedia Implementation and Enchatments
 
-# Hypermedia Implementation
+### Hypermedia Implementation
 
 ## Media Type: `application/hal+json`
 **Reasoning**:  
