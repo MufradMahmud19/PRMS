@@ -99,10 +99,10 @@ pytest tests/test_patient_data.py::test_create_patient
 ```
 
 ### ✔️ Coverage Highlights
-|Type|Tests|Purpose|
-|Link Validation|28|Verifies _links correctness|
-|Error Recovery|15|Ensures helpful links on 4xx/5xx|
-|State Validation|12|Confirms valid transitions|
+|**Type**|**Tests**|**Purpose**|
+|:Link Validation:|:28:|:Verifies _links correctness:|
+|:Error Recovery:|:15:|:Ensures helpful links on 4xx/5xx:|
+|:State Validation:|:12:|:Confirms valid transitions:|
 
 ### 🌐 Hypermedia API
 - Media Type: `application/hal+json`
