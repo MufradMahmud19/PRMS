@@ -173,23 +173,23 @@ curl -X POST "http://127.0.0.1:8000/patient_visit" \
 
 # 🧠 Hypermedia Implementation and Enchatments
 
-### Hypermedia Implementation
+## Hypermedia Implementation
 
-## Media Type: `application/hal+json`
+### Media Type: `application/hal+json`
 **Reasoning**:  
 - Native support for embedded resources (`_embedded`) and links (`_links`)  
 - Compatible with JSON tooling while providing hypermedia controls  
 - Adopted by healthcare standards like FHIR  
 
-## Custom Link Relations
+### Custom Link Relations
 | Relation | Type | IANA Equivalent | Purpose |
 |----------|------|-----------------|---------|
 | `hospital:prescribe` | Action | None | Create new prescription |
 | `hospital:attach-report` | Navigation | None | Link report to visit |
 | `hospital:patient-timeline` | Collection | `collection` | Full patient history |
 
-## Connectedness Mechanism
-1. **Resource Navigation**:
+### Connectedness Mechanism
+**1. Resource Navigation**:
    ```json
    {
      "_links": {
@@ -197,7 +197,7 @@ curl -X POST "http://127.0.0.1:8000/patient_visit" \
        "hospital:visits": {"href": "/visits?patient=123", "method": "GET"}
      }
    }
-
+  ```
 ## Error Recovery
 ```json
 {
