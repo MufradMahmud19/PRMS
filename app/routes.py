@@ -11,6 +11,7 @@ bp = Blueprint('api', __name__, url_prefix='/api')
 
 # Welcome route
 @bp.route('/', methods=['GET'])
+@cache_response(timeout=300)  # Cache welcome page for 5 minutes
 def welcome():
     return jsonify({
         'message': 'Welcome to Patient Record Management System (PRMS)',
@@ -181,6 +182,7 @@ def delete_patient(patient_id):
 # ------------------- Visit Routes ------------------- #
 
 @bp.route('/visits/<int:visit_id>', methods=['GET'])
+@cache_response(timeout=60)  # Cache for 1 minute
 def get_visit(visit_id):
     hateoas = Hateoas(request.host_url)
     visit = Visit.query.get_or_404(visit_id)
@@ -212,6 +214,9 @@ def create_visit():
     )
     db.session.add(visit)
     db.session.commit()
+    
+    # Invalidate visits cache
+    invalidate_cache('get_all_visits:():{}')
     return jsonify({'message': 'Visit created', 'visit_id': visit.visit_id}), 201
 
 @bp.route('/visits/<int:visit_id>', methods=['PUT'])
@@ -229,6 +234,15 @@ def delete_visit(visit_id):
     db.session.commit()
     return jsonify({'message': 'Visit deleted'})
 
+@bp.route('/visits', methods=['GET'])
+@cache_response(timeout=60)  # Cache for 1 minute
+def get_all_visits():
+    try:
+        visits = Visit.query.all()
+        return jsonify([visit.to_dict() for visit in visits])
+    except Exception as e:
+        current_app.logger.error(f"Error getting visits: {str(e)}")
+        return jsonify({'error': 'Internal server error'}), 500
 
 # ------------------- Prescription Routes ------------------- #
 
@@ -264,6 +278,15 @@ def delete_prescription(prescription_id):
     db.session.commit()
     return jsonify({'message': 'Prescription deleted'})
 
+@bp.route('/prescriptions', methods=['GET'])
+@cache_response(timeout=60)  # Cache for 1 minute
+def get_all_prescriptions():
+    try:
+        prescriptions = Prescription.query.all()
+        return jsonify([prescription.to_dict() for prescription in prescriptions])
+    except Exception as e:
+        current_app.logger.error(f"Error getting prescriptions: {str(e)}")
+        return jsonify({'error': 'Internal server error'}), 500
 
 # ------------------- Report Routes ------------------- #
 
@@ -295,43 +318,15 @@ def delete_report(report_id):
     db.session.commit()
     return jsonify({'message': 'Report deleted'})
 
-
-# ------------------- Get All Visits ------------------- #
-@bp.route('/visits', methods=['GET'])
-def get_all_visits():
-    visits = Visit.query.all()
-    return jsonify([{
-        "visit_id": v.visit_id,
-        "date": v.visit_date.isoformat(),
-        "diagnosis": v.diagnosis,
-        "doctor_id": v.doctor_id,
-        "patient_id": v.patient_id
-    } for v in visits])
-
-# ------------------- Get All Prescriptions ------------------- #
-@bp.route('/prescriptions', methods=['GET'])
-def get_all_prescriptions():
-    prescriptions = Prescription.query.all()
-    return jsonify([{
-        "prescription_id": p.prescription_id,
-        "drug_name": p.drug_name,
-        "dosage": p.dosage,
-        "duration": p.duration,
-        "patient_id": p.patient_id,
-        "doctor_id": p.doctor_id,
-        "visit_id": p.visit_id
-    } for p in prescriptions])
-
-# ------------------- Get All Reports ------------------- #
 @bp.route('/reports', methods=['GET'])
+@cache_response(timeout=60)  # Cache for 1 minute
 def get_all_reports():
-    reports = Report.query.all()
-    return jsonify([{
-        "report_id": r.report_id,
-        "report_type": r.report_type,
-        "report_data": r.report_data,
-        "patient_id": r.patient_id
-    } for r in reports])
+    try:
+        reports = Report.query.all()
+        return jsonify([report.to_dict() for report in reports])
+    except Exception as e:
+        current_app.logger.error(f"Error getting reports: {str(e)}")
+        return jsonify({'error': 'Internal server error'}), 500
 
 @bp.route('/static/swagger.json')
 def serve_swagger():

@@ -5,6 +5,7 @@ from flask_migrate import Migrate
 from .app_extensions import db, jwt, swagger_ui, cache
 from .app_config import Config
 from .models import User
+from .config.redis_config import init_redis
 
 def create_app(config_name=None):
     app = Flask(__name__)
@@ -36,8 +37,8 @@ def create_app(config_name=None):
         app.config['DEBUG'] = True  # Enable debug mode
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         app.config['SQLALCHEMY_ECHO'] = True  # Enable SQL query logging
-        app.config['CACHE_TYPE'] = 'simple'  # Use simple cache for development
-        app.config['CACHE_DEFAULT_TIMEOUT'] = 300  # 5 minutes timeout
+        # Initialize Redis cache
+        init_redis(app)
 
     # Configure JWT
     app.config['JWT_SECRET_KEY'] = 'your-secret-key'  # Change this to a secure secret key
