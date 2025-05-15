@@ -1,0 +1,797 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "PRMS API",
+      "version": "1.0.0",
+      "description": "This is a patient record management system API that provides a comprehensive set of endpoints for managing patients, visits, prescriptions, and medical reports. It enables healthcare providers to create, update, retrieve, and delete records efficiently, with support for caching, token-based authentication, and hypermedia-driven navigation.\n\nYou can find out more about this API at: https://github.com/MufradMahmud19/PRMS\n\nThe API follows RESTful principles and implements proper authentication using API keys and JWT-based access tokens.\n\n## Key Features\n\n- **Patient management**: Create, update, view, and delete patient records\n- **Visit scheduling**: Schedule, cancel, and refer patient visits\n- **Prescription handling**: Prescribe medication, adjust dosages, and renew prescriptions\n- **Medical reporting**: Upload, share, and archive medical reports\n- **Hypermedia navigation**: Built-in links for each resource to support dynamic client interaction\n- **Custom link relations**: Uses hospital: namespace for non-standard actions like hospital:add-patient or hospital:upload-report\n- **Connected resources**: Patients link to visits and reports; visits link to prescriptions\n- **Error recovery support**: Error responses include links like hospital:retry-action and hospital:contact-support\n- **Secure access**: Protected endpoints require API key or JWT authentication\n- **Caching support**: Frequently accessed endpoints (like patient lists) use server-side caching\n\nFor any support please contact the development team.",
+      "contact": {
+        "name": "Development Team",
+        "url": "https://github.com/MufradMahmud19/PRMS"
+      }
+    },
+    "servers": [
+      {
+        "url": "http://127.0.0.1:5001",
+        "description": "Local development server"
+      }
+    ],
+    "components": {
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT",
+          "in": "header"
+        }
+      },
+      "schemas": {
+        "Patient": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "description": "Patient ID"
+            },
+            "name": {
+              "type": "string",
+              "description": "Patient name"
+            },
+            "age": {
+              "type": "integer",
+              "description": "Patient age"
+            },
+            "contact_info": {
+              "type": "string",
+              "description": "Patient contact information"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Creation timestamp"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Last update timestamp"
+            }
+          }
+        },
+        "PatientInput": {
+          "type": "object",
+          "required": ["name", "age", "contact_info"],
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Patient name"
+            },
+            "age": {
+              "type": "integer",
+              "description": "Patient age"
+            },
+            "contact_info": {
+              "type": "string",
+              "description": "Patient contact information"
+            }
+          }
+        },
+        "Visit": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "description": "Visit ID"
+            },
+            "patient_id": {
+              "type": "integer",
+              "description": "Patient ID"
+            },
+            "scheduled_at": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Scheduled datetime"
+            },
+            "status": {
+              "type": "string",
+              "description": "Status of the visit (scheduled, cancelled, completed)"
+            },
+            "notes": {
+              "type": "string",
+              "description": "Visit notes"
+            }
+          }
+        },
+        "VisitInput": {
+          "type": "object",
+          "required": ["patient_id", "scheduled_at"],
+          "properties": {
+            "patient_id": {
+              "type": "integer",
+              "description": "Patient ID"
+            },
+            "scheduled_at": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Scheduled datetime"
+            },
+            "notes": {
+              "type": "string",
+              "description": "Visit notes"
+            }
+          }
+        },
+        "Prescription": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "description": "Prescription ID"
+            },
+            "visit_id": {
+              "type": "integer",
+              "description": "Associated visit ID"
+            },
+            "medication": {
+              "type": "string",
+              "description": "Medication name"
+            },
+            "dosage": {
+              "type": "string",
+              "description": "Dosage instructions"
+            },
+            "frequency": {
+              "type": "string",
+              "description": "Frequency of medication"
+            },
+            "start_date": {
+              "type": "string",
+              "format": "date",
+              "description": "Start date"
+            },
+            "end_date": {
+              "type": "string",
+              "format": "date",
+              "description": "End date"
+            }
+          }
+        },
+        "PrescriptionInput": {
+          "type": "object",
+          "required": ["visit_id", "medication", "dosage"],
+          "properties": {
+            "visit_id": {
+              "type": "integer",
+              "description": "Associated visit ID"
+            },
+            "medication": {
+              "type": "string",
+              "description": "Medication name"
+            },
+            "dosage": {
+              "type": "string",
+              "description": "Dosage instructions"
+            },
+            "frequency": {
+              "type": "string",
+              "description": "Frequency of medication"
+            },
+            "start_date": {
+              "type": "string",
+              "format": "date",
+              "description": "Start date"
+            },
+            "end_date": {
+              "type": "string",
+              "format": "date",
+              "description": "End date"
+            }
+          }
+        },
+        "Report": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "description": "Report ID"
+            },
+            "patient_id": {
+              "type": "integer",
+              "description": "Patient ID"
+            },
+            "uploaded_at": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Upload timestamp"
+            },
+            "file_url": {
+              "type": "string",
+              "description": "URL to access the report file"
+            },
+            "description": {
+              "type": "string",
+              "description": "Report description"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "paths": {
+      "/api/login": {
+        "post": {
+          "tags": ["Authentication"],
+          "summary": "Login to get JWT token",
+          "security": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["username", "password"],
+                  "properties": {
+                    "username": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Login successful",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "access_token": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/patients": {
+        "get": {
+          "tags": ["Patients"],
+          "summary": "Get all patients",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "List of patients",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Patient"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": ["Patients"],
+          "summary": "Create a new patient",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Patient created successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Patient"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/patients/{patient_id}": {
+        "get": {
+          "tags": ["Patients"],
+          "summary": "Get a patient by ID",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "patient_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Patient details",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Patient"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Patient not found"
+            }
+          }
+        },
+        "put": {
+          "tags": ["Patients"],
+          "summary": "Update a patient",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "patient_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Patient updated successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Patient"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Patient not found"
+            }
+          }
+        },
+        "delete": {
+          "tags": ["Patients"],
+          "summary": "Delete a patient",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "patient_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Patient deleted successfully"
+            },
+            "404": {
+              "description": "Patient not found"
+            }
+          }
+        }
+      },
+      "/api/visits": {
+        "get": {
+          "tags": ["Visits"],
+          "summary": "Get all visits",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "List of visits",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Visit"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": ["Visits"],
+          "summary": "Schedule a new visit",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VisitInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Visit scheduled successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Visit"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/visits/{visit_id}": {
+        "get": {
+          "tags": ["Visits"],
+          "summary": "Get a visit by ID",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "visit_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Visit details",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Visit"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Visit not found"
+            }
+          }
+        }     
+      },
+      "/api/visits/{visit_id}/refer": {
+        "post": {
+          "tags": ["Visits"],
+          "summary": "Refer a visit to another provider",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "visit_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["referral_provider"],
+                  "properties": {
+                    "referral_provider": {
+                      "type": "string",
+                      "description": "Provider to refer visit to"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Visit referred successfully"
+            }
+          }
+        }
+      },
+      "/api/prescriptions": {
+        "get": {
+          "tags": ["Prescriptions"],
+          "summary": "Get all prescriptions",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "List of prescriptions",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Prescription"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": ["Prescriptions"],
+          "summary": "Create a new prescription",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrescriptionInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Prescription created successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Prescription"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/prescriptions/{prescription_id}": {
+        "get": {
+          "tags": ["Prescriptions"],
+          "summary": "Get prescription details",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "prescription_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Prescription details",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Prescription"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Prescription not found"
+            }
+          }
+        }   
+      },
+      "/api/reports": {
+        "get": {
+          "tags": ["Reports"],
+          "summary": "Get all medical reports",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "List of reports",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Report"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": ["Reports"],
+          "summary": "Upload a medical report",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "type": "object",
+                  "required": ["patient_id", "report_type", "report_data"],
+                  "properties": {
+                    "patient_id": {
+                      "type": "integer",
+                      "description": "Patient ID"
+                    },
+                    "report_type": {
+                      "type": "string",
+                      "description": "Type of report"
+                    },
+                    "report_data": {
+                      "type": "string",
+                      "description": "Content of the report (plain text, base64, etc.)"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Report uploaded successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Report"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/reports/{report_id}": {
+        "get": {
+          "tags": ["Reports"],
+          "summary": "Get report details",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "report_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Report details",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Report"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Report not found"
+            }
+          }
+        },
+        "delete": {
+          "tags": ["Reports"],
+          "summary": "Archive (delete) a report",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "report_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Report archived successfully"
+            },
+            "404": {
+              "description": "Report not found"
+            }
+          }
+        }
+      }
+      
+    }
+  }
+  
