@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Analytics Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .error-message {
+            color: red;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid red;
+            border-radius: 4px;
+            background-color: #fff3f3;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+        .card {
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .card-header {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0d6efd;
+        }
+        .stat-label {
+            color: #6c757d;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-primary mb-4">
+        <div class="container">
+            <span class="navbar-brand mb-0 h1">Medical Analytics Dashboard</span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div id="error-container"></div>
+        <div id="loading" class="loading">Loading dashboard data...</div>
+
+        <div class="row">
+            <!-- Patient Statistics -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">Patient Statistics</div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <div class="stat-value" id="total-patients">-</div>
+                                <div class="stat-label">Total Patients</div>
+                            </div>
+                            <div class="col-6">
+                                <div class="stat-value" id="avg-age">-</div>
+                                <div class="stat-label">Average Age</div>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="age-distribution"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visit Trends -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">Visit Trends</div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <div class="stat-value" id="total-visits">-</div>
+                                <div class="stat-label">Total Visits</div>
+                            </div>
+                            <div class="col-6">
+                                <div class="stat-value" id="avg-daily-visits">-</div>
+                                <div class="stat-label">Avg Daily Visits</div>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="visit-trends"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prescription Analysis -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">Prescription Analysis</div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <div class="stat-value" id="total-prescriptions">-</div>
+                                <div class="stat-label">Total Prescriptions</div>
+                            </div>
+                            <div class="col-6">
+                                <div class="stat-value" id="unique-drugs">-</div>
+                                <div class="stat-label">Unique Drugs</div>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="prescription-analysis"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Doctor Workload -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">Doctor Workload</div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <div class="stat-value" id="total-doctors">-</div>
+                                <div class="stat-label">Total Doctors</div>
+                            </div>
+                            <div class="col-6">
+                                <div class="stat-value" id="avg-visits-per-doctor">-</div>
+                                <div class="stat-label">Avg Visits/Doctor</div>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="doctor-workload"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize charts
+        const ageChart = new Chart(document.getElementById('age-distribution'), {
+            type: 'bar',
+            data: {
+                labels: ['0-18', '19-30', '31-50', '51-70', '70+'],
+                datasets: [{
+                    label: 'Number of Patients',
+                    data: [0, 0, 0, 0, 0],
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const visitChart = new Chart(document.getElementById('visit-trends'), {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Daily Visits',
+                    data: [],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const prescriptionChart = new Chart(document.getElementById('prescription-analysis'), {
+            type: 'pie',
+            data: {
+                labels: [],
+                datasets: [{
+                    data: [],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(153, 102, 255, 0.5)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        const doctorChart = new Chart(document.getElementById('doctor-workload'), {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Visits per Doctor',
+                    data: [],
+                    backgroundColor: 'rgba(153, 102, 255, 0.5)',
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Function to show error message
+        function showError(message) {
+            const errorContainer = document.getElementById('error-container');
+            errorContainer.innerHTML = `<div class="error-message">${message}</div>`;
+        }
+
+        // Function to hide loading message
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        // Function to update dashboard with data
+        async function updateDashboard() {
+            try {
+                // Fetch all data concurrently
+                const [patientStats, visitTrends, prescriptionAnalysis, doctorWorkload] = await Promise.all([
+                    fetch('/analytics/patient-stats').then(r => r.json()),
+                    fetch('/analytics/visit-trends').then(r => r.json()),
+                    fetch('/analytics/prescription-analysis').then(r => r.json()),
+                    fetch('/analytics/doctor-workload').then(r => r.json())
+                ]);
+
+                // Check for errors
+                if (patientStats.error) throw new Error(patientStats.error);
+                if (visitTrends.error) throw new Error(visitTrends.error);
+                if (prescriptionAnalysis.error) throw new Error(prescriptionAnalysis.error);
+                if (doctorWorkload.error) throw new Error(doctorWorkload.error);
+
+                // Update Patient Statistics
+                document.getElementById('total-patients').textContent = patientStats.total_patients;
+                document.getElementById('avg-age').textContent = patientStats.average_age.toFixed(1);
+                ageChart.data.datasets[0].data = Object.values(patientStats.age_distribution);
+                ageChart.update();
+
+                // Update Visit Trends
+                document.getElementById('total-visits').textContent = visitTrends.total_visits;
+                document.getElementById('avg-daily-visits').textContent = visitTrends.average_daily_visits.toFixed(1);
+                
+                // Sort dates for visit trends
+                const sortedDates = Object.keys(visitTrends.daily_visits).sort();
+                visitChart.data.labels = sortedDates;
+                visitChart.data.datasets[0].data = sortedDates.map(date => visitTrends.daily_visits[date]);
+                visitChart.update();
+
+                // Update Prescription Analysis
+                document.getElementById('total-prescriptions').textContent = prescriptionAnalysis.total_prescriptions;
+                document.getElementById('unique-drugs').textContent = prescriptionAnalysis.unique_drugs;
+                
+                // Sort drugs by usage for prescription chart
+                const sortedDrugs = Object.entries(prescriptionAnalysis.most_prescribed_drugs)
+                    .sort((a, b) => b[1] - a[1]);
+                prescriptionChart.data.labels = sortedDrugs.map(([drug]) => drug);
+                prescriptionChart.data.datasets[0].data = sortedDrugs.map(([, count]) => count);
+                prescriptionChart.update();
+
+                // Update Doctor Workload
+                document.getElementById('total-doctors').textContent = doctorWorkload.total_doctors;
+                const doctorStats = Object.values(doctorWorkload.doctor_stats);
+                
+                // Sort doctors by visits
+                const sortedDoctors = doctorStats.sort((a, b) => b.visits - a.visits);
+                const avgVisits = doctorStats.reduce((sum, doc) => sum + doc.visits, 0) / doctorStats.length;
+                document.getElementById('avg-visits-per-doctor').textContent = avgVisits.toFixed(1);
+                
+                doctorChart.data.labels = sortedDoctors.map(doc => doc.name);
+                doctorChart.data.datasets[0].data = sortedDoctors.map(doc => doc.visits);
+                doctorChart.update();
+
+                hideLoading();
+            } catch (error) {
+                showError(`Error loading dashboard: ${error.message}`);
+                hideLoading();
+            }
+        }
+
+        // Update dashboard when page loads
+        updateDashboard();
+
+        // Update dashboard every 5 minutes
+        setInterval(updateDashboard, 300000);
+    </script>
+</body>
+</html> 
