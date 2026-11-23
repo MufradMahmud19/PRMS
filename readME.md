@@ -4,9 +4,9 @@ A comprehensive healthcare management system with a FastAPI backend, React front
 
 ## 👥 Group Members
 
-- **Md. Noman** – [Md.Noman@student.oulu.fi](mailto:Md.Noman@student.oulu.fi)  
-- **Siraj Us Salekin** – [Siraj.Salekin@student.oulu.fi](mailto:Siraj.Salekin@student.oulu.fi)  
 - **Mufrad Mahmud** – [mufrad.mahmud@student.oulu.fi](mailto:mufrad.mahmud@student.oulu.fi)
+- **Md. Noman** – [Md.Noman@student.oulu.fi](mailto:Md.Noman@student.oulu.fi)  
+- **Siraj Us Salekin** – [Siraj.Salekin@student.oulu.fi](mailto:Siraj.Salekin@student.oulu.fi)
 
 ## 🌟 Overview
 
